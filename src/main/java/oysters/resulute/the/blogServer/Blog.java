@@ -1,4 +1,6 @@
 package oysters.resulute.the.blogServer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,7 +28,7 @@ public class Blog {
     private String author;
     private String text;
 
-    public Blog(String author, String text) {
+    public Blog(@JsonProperty("author") String author, @JsonProperty("text") String text) {
         this.author = author;
         this.text = text;
     }
@@ -55,5 +57,12 @@ public class Blog {
         this.text = text;
     }
 
-
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
