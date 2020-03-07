@@ -7,18 +7,6 @@ import javax.persistence.Id;
  * Class representing blog post.
  * Also used for database actions.
  */
-
-@Entity
-public class Blog {
-
-    /**
-     *
-     */
-    @Id
-    @GeneratedValue
-    private int id;
-    private String author;
-    private String text;
     /*TODO
     Tags
     visitors amount
@@ -27,7 +15,22 @@ public class Blog {
     folders
     sharing?
     Videos?
-     */
+    JavaDoc
+    */
+@Entity
+public class Blog {
+
+    @Id
+    @GeneratedValue
+    private int id;
+    private String author;
+    private String text;
+
+    public Blog(String author, String text) {
+        this.author = author;
+        this.text = text;
+    }
+
     public int getId() {
         return id;
     }
@@ -51,4 +54,6 @@ public class Blog {
     public void setText(String text) {
         this.text = text;
     }
+
+
 }
