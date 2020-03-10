@@ -19,7 +19,7 @@ public class MyController {
 
     // curl http://localhost:8080/blogs/1
     @RequestMapping(value = "/blogs/{locationId}",  method= RequestMethod.GET)
-    public ResponseEntity<Blog> fetchLocation(@PathVariable long locationId) throws CannotFindBlogException {
+    public ResponseEntity<Blog> fetchBlog(@PathVariable long locationId) throws CannotFindBlogException {
         Optional<Blog> location = database.findById(locationId);
         if(location.isPresent())
             return new ResponseEntity<Blog>(location.get(), HttpStatus.OK);
@@ -27,12 +27,15 @@ public class MyController {
             throw new CannotFindBlogException(locationId);
     }
 
+
     // curl http://localhost:8080/blogs/
 
     @RequestMapping(value = "/blogs/",  method= RequestMethod.GET)
     public Iterable<Blog> fetchAll() {
         return database.findAll();
     }
+
+
 
     // curl -X DELETE http://localhost:8080/delete/1
     @RequestMapping(value = "/delete/{blogId}",  method= RequestMethod.DELETE)
