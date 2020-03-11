@@ -47,7 +47,9 @@ public class MyController {
             throw new CannotFindBlogException(blogId);
         }
     }
-
+    //to modify existing blog
+    //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"id\":1,\"author\":\"value\",\"text\":\"heii\"}" http://localhost:8080/save
+    //to save new blog
     //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"moiiiii\"}" http://localhost:8080/save
     @RequestMapping("/save")
     public ResponseEntity<Blog>  saveBlogPost(@RequestBody Blog blog, UriComponentsBuilder b){
