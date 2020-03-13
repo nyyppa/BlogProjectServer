@@ -31,11 +31,9 @@ public class Blog implements Serializable {
     private String author;
     private String text;
 
-
-
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private Date time;
+    private Date creationTime;
 
     public Blog(){
 
@@ -70,12 +68,12 @@ public class Blog implements Serializable {
         this.text = text;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getCreationTime() {
+        return creationTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 
     @Override
