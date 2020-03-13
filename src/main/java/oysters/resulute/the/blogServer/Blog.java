@@ -1,16 +1,18 @@
 package oysters.resulute.the.blogServer;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.jpa.repository.Temporal;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  * Class representing blog post.
  * Also used for database actions.
  */
     /*TODO
+    timestamp
     Tags
     visitors amount
     images
@@ -29,11 +31,17 @@ public class Blog implements Serializable {
     private String author;
     private String text;
 
+
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date time;
+
     public Blog(){
 
     }
 
-    public Blog( String author, String text) {
+    public Blog(String author, String text) {
         this.author = author;
         this.text = text;
     }
@@ -60,6 +68,14 @@ public class Blog implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     @Override
