@@ -1,10 +1,11 @@
 package oysters.resulute.the.blogServer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.jpa.repository.Temporal;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -23,13 +24,21 @@ import java.util.Date;
     JavaDoc
     */
 @Entity
+@JsonDeserialize(using = BlogJsonDeserializer.class)
+@JsonSerialize(using = BlogJsonSerializer.class)
 public class Blog implements Serializable {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long blogId;
     private String author;
     private String text;
+    @ManyToMany
+    @JoinTable(
+            name = "blog_tags",
+            joinColumns = @JoinColumn(name = "blog_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -44,12 +53,27 @@ public class Blog implements Serializable {
         this.text = text;
     }
 
-    public long getId() {
-        return id;
+
+    public Set<Tag> getTags() {
+        return tags;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+    public void addTag(Tag tag){
+        if(tags==null){
+            tags=new HashSet<>();
+        }
+        tags.add(tag);
+    }
+
+    public long getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(long blogId) {
+        this.blogId = blogId;
     }
 
     public String getAuthor() {
@@ -75,13 +99,34 @@ public class Blog implements Serializable {
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
+    public boolean hasTag(Tag tag){
+        return tags.stream().filter(tag1 -> equals(tag)).findAny().isPresent();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==this){
+            return  true;
+        }else if(!(obj instanceof Blog)){
+            return false;
+        }else{
+            Blog blog= (Blog) obj;
+            if(blog.getBlogId()==0){
+                return false;
+            }else{
+                return blog.getBlogId()==this.getBlogId();
+            }
+        }
+    }
 
     @Override
     public String toString() {
         return "Blog{" +
-                "id=" + id +
+                "blogId=" + blogId +
                 ", author='" + author + '\'' +
                 ", text='" + text + '\'' +
+                ", tags=" + tags.size() +
+                ", creationTime=" + creationTime +
                 '}';
     }
 }

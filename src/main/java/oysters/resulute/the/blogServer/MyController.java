@@ -19,12 +19,12 @@ public class MyController {
 
     // curl http://localhost:8080/blogs/1
     @RequestMapping(value = "/blogs/{locationId}",  method= RequestMethod.GET)
-    public ResponseEntity<Blog> fetchBlog(@PathVariable long locationId) throws CannotFindBlogException {
-        Optional<Blog> location = database.findById(locationId);
-        if(location.isPresent())
-            return new ResponseEntity<Blog>(location.get(), HttpStatus.OK);
+    public ResponseEntity<Blog> fetchBlog(@PathVariable long blogId) throws CannotFindBlogException {
+        Optional<Blog> blog = database.findById(blogId);
+        if(blog.isPresent())
+            return new ResponseEntity<Blog>(blog.get(), HttpStatus.OK);
         else
-            throw new CannotFindBlogException(locationId);
+            throw new CannotFindBlogException(blogId);
     }
 
 
@@ -56,9 +56,10 @@ public class MyController {
         System.out.println(blog);
         database.save(blog);
         UriComponents uriComponents =
-                b.path("/locations/{id}").buildAndExpand(blog.getId());
+                b.path("/locations/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uriComponents.toUri());
+
         return new ResponseEntity<Blog>(blog, headers, HttpStatus.CREATED);
     }
 
