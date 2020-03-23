@@ -13,8 +13,8 @@ import java.util.*;
  * Also used for database actions.
  */
     /*TODO
-    timestamp
-    Tags
+    done timestamp
+    done Tags
     visitors amount
     images
     comments
