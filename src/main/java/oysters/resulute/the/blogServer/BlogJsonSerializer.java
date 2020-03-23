@@ -16,7 +16,7 @@ public class BlogJsonSerializer extends JsonSerializer<Blog> {
         jsonGenerator.writeNumberField(BlogJsonDeserializer.idKey,blog.getBlogId());
         jsonGenerator.writeStringField(BlogJsonDeserializer.authorKey,blog.getAuthor());
         jsonGenerator.writeStringField(BlogJsonDeserializer.textKey,blog.getText());
-        jsonGenerator.writeStringField("creation time",blog.getCreationTime().toString());
+        jsonGenerator.writeStringField("creationTime",blog.getCreationTime().toString());
         jsonGenerator.writeArrayFieldStart(BlogJsonDeserializer.tagsKey);
         for(Tag tag:blog.getTags()){
             jsonGenerator.writeString(tag.getTagId());
