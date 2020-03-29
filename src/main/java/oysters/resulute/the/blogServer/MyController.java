@@ -15,12 +15,15 @@ import java.util.Optional;
 @RestController
 public class MyController {
     @Autowired
-    MyDatabaseHandler database;
+    MyBlogDatabaseHandler blogDatabase;
+
+    @Autowired
+    MyTagDatabaseHandler tagDatabaseHandler;
 
     // curl http://localhost:8080/blogs/1
-    @RequestMapping(value = "/blogs/{locationId}",  method= RequestMethod.GET)
+    @RequestMapping(value = "/blogs/{blogId}",  method= RequestMethod.GET)
     public ResponseEntity<Blog> fetchBlog(@PathVariable long blogId) throws CannotFindBlogException {
-        Optional<Blog> blog = database.findById(blogId);
+        Optional<Blog> blog = blogDatabase.findById(blogId);
         if(blog.isPresent())
             return new ResponseEntity<Blog>(blog.get(), HttpStatus.OK);
         else
@@ -31,8 +34,8 @@ public class MyController {
     // curl http://localhost:8080/blogs/
 
     @RequestMapping(value = "/blogs/",  method= RequestMethod.GET)
-    public Iterable<Blog> fetchAll() {
-        return database.findAll();
+    public Iterable<Blog> fetchAllBlogs() {
+        return blogDatabase.findAll();
     }
 
 
@@ -40,8 +43,8 @@ public class MyController {
     // curl -X DELETE http://localhost:8080/delete/1
     @RequestMapping(value = "/delete/{blogId}",  method= RequestMethod.DELETE)
     public ResponseEntity<Void> deleteBlog(@PathVariable long blogId) throws CannotFindBlogException {
-        if(database.existsById(blogId)) {
-            database.deleteById(blogId);
+        if(blogDatabase.existsById(blogId)) {
+            blogDatabase.deleteById(blogId);
             return new ResponseEntity<Void>(HttpStatus.OK);
         } else {
             throw new CannotFindBlogException(blogId);
@@ -56,13 +59,20 @@ public class MyController {
     @RequestMapping("/save")
     public ResponseEntity<Blog>  saveBlogPost(@RequestBody Blog blog, UriComponentsBuilder b){
         System.out.println(blog);
-        database.save(blog);
+        blogDatabase.save(blog);
         UriComponents uriComponents =
                 b.path("/locations/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uriComponents.toUri());
 
         return new ResponseEntity<Blog>(blog, headers, HttpStatus.CREATED);
+    }
+
+    // curl http://localhost:8080/tags/
+
+    @RequestMapping(value = "/tags/",  method= RequestMethod.GET)
+    public Iterable<Tag> fetchAllTags() {
+        return tagDatabaseHandler.findAll();
     }
 
 }

@@ -1,6 +1,9 @@
 package oysters.resulute.the.blogServer;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,12 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//@JsonSerialize(using = TagJsonSerializer.class)
 @Entity
 public class Tag implements Serializable {
 
     @Id
     String tagId;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     Set<Blog> blogList;
 
