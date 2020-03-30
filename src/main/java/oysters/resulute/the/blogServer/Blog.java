@@ -1,7 +1,9 @@
 package oysters.resulute.the.blogServer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,8 +42,9 @@ public class Blog implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
-//    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-//    private Set<Comment> comments;
+    @JsonIgnore
+    @OneToMany(mappedBy = "parentBlog", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -95,14 +98,21 @@ public class Blog implements Serializable {
         this.text = text;
     }
 
-   /* public Set<Comment> getComments() {
+   public Set<Comment> getComments() {
         return comments;
     }
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
-*/
+
+    public void addComment(Comment comment){
+        if(comments.add(comment)){
+            comment.setParentBlog(this);
+        }
+
+    }
+
     public Date getCreationTime() {
         return creationTime;
     }

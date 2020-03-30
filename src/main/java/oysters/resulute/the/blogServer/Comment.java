@@ -1,13 +1,17 @@
 package oysters.resulute.the.blogServer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 public class Comment implements Serializable {
+
 
     @Id
     @GeneratedValue
@@ -19,6 +23,12 @@ public class Comment implements Serializable {
     @JoinColumn(name="blog_id",nullable = false)
     @JsonIgnore
     Blog parentBlog;
+
+
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date creationTime;
 
     public Comment() {
     }
@@ -74,12 +84,21 @@ public class Comment implements Serializable {
         return Objects.hash(commentId);
     }
 
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
-                "blogId=" + commentId +
+                "commentId=" + commentId +
                 ", author='" + author + '\'' +
                 ", text='" + text + '\'' +
+                ", creationTime=" + creationTime +
                 '}';
     }
 }

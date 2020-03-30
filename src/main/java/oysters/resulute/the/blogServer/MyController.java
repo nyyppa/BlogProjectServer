@@ -10,6 +10,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +21,9 @@ public class MyController {
 
     @Autowired
     MyTagDatabaseHandler tagDatabaseHandler;
+
+    @Autowired
+    MyCommentDatabaseHandler commentDatabaseHandler;
 
     // curl http://localhost:8080/blogs/1
     @RequestMapping(value = "/blogs/{blogId}",  method= RequestMethod.GET)
@@ -61,7 +66,7 @@ public class MyController {
         System.out.println(blog);
         blogDatabase.save(blog);
         UriComponents uriComponents =
-                b.path("/locations/{id}").buildAndExpand(blog.getBlogId());
+                b.path("/blogs/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uriComponents.toUri());
 
@@ -74,6 +79,33 @@ public class MyController {
         return tagDatabaseHandler.findAll();
     }
 
+    // curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"heii\"}" http://localhost:8080/comment/1
+    //TODO add error handling
+    //TODO clean uri component
+    @RequestMapping(value = "/comment/{blogId}", method = RequestMethod.POST)
+    public ResponseEntity<Comment>  saveComment(@RequestBody Comment comment,@PathVariable long blogId, UriComponentsBuilder b){
+        Blog blog=blogDatabase.findById(blogId).get();
+        System.out.println(comment);
+        blog.addComment(comment);
+        commentDatabaseHandler.save(comment);
+        //blogDatabase.save(blog);
+        UriComponents uriComponents =
+                b.path("/comment/{id}").buildAndExpand(comment.getParentBlog().getBlogId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uriComponents.toUri());
 
+        return new ResponseEntity<Comment>(comment, headers, HttpStatus.CREATED);
+    }
+
+    // curl http://localhost:8080/comment/1
+    @RequestMapping(value = "/comment/{blogId}",  method= RequestMethod.GET)
+    public Iterable<Comment> fetchComments(@PathVariable long blogId) throws CannotFindBlogException {
+        Optional<Blog> blog = blogDatabase.findById(blogId);
+        if(blog.isPresent()){
+            return blog.get().getComments();
+        }else {
+            return new ArrayList<>();
+        }
+    }
 
 }

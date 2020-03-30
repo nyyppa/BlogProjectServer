@@ -45,16 +45,6 @@ public class BlogJsonDeserializer extends JsonDeserializer<Blog> {
         return blog;
     }
 
-    public void handleComments(Blog blog, JsonNode node){
-        if(node.hasNonNull(commentsKey)){
-            ArrayNode comments=(ArrayNode) node.get(commentsKey);
-            Iterator<JsonNode>iterator=comments.iterator();
-            while (iterator.hasNext()){
-                JsonNode jsonNode=iterator.next();
-            }
-        }
-    }
-
     public void handleTags(Blog blog, JsonNode node){
         System.out.println("hei");
         if(node.hasNonNull(tagsKey)){
