@@ -25,7 +25,7 @@ import java.util.*;
     */
 @Entity
 @JsonDeserialize(using = BlogJsonDeserializer.class)
-@JsonSerialize(using = BlogJsonSerializer.class)
+//@JsonSerialize(using = BlogJsonSerializer.class)
 public class Blog implements Serializable {
 
     @Id
