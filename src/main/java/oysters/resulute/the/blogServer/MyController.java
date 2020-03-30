@@ -55,7 +55,7 @@ public class MyController {
     //to save new blog
     //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"moiiiii\"}" http://localhost:8080/save
     //to save new blog with tags
-    //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"heii\",\"tags\":[\"jorma\",\"pena\"]}" http://localhost:8080/save
+    //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"heii\",\"tags\":[{\"tagId\":\"jorma\"},{\"tagId\":\"pena\"}]}" http://localhost:8080/save
     @RequestMapping("/save")
     public ResponseEntity<Blog>  saveBlogPost(@RequestBody Blog blog, UriComponentsBuilder b){
         System.out.println(blog);
@@ -74,5 +74,7 @@ public class MyController {
     public Iterable<Tag> fetchAllTags() {
         return tagDatabaseHandler.findAll();
     }
+
+
 
 }
