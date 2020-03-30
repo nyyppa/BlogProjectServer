@@ -69,7 +69,6 @@ public class MyController {
     }
 
     // curl http://localhost:8080/tags/
-
     @RequestMapping(value = "/tags/",  method= RequestMethod.GET)
     public Iterable<Tag> fetchAllTags() {
         return tagDatabaseHandler.findAll();

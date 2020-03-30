@@ -40,6 +40,9 @@ public class Blog implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
+//    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+//    private Set<Comment> comments;
+
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Date creationTime;
@@ -92,6 +95,14 @@ public class Blog implements Serializable {
         this.text = text;
     }
 
+   /* public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+*/
     public Date getCreationTime() {
         return creationTime;
     }
