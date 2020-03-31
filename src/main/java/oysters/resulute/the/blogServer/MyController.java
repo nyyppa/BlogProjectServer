@@ -108,4 +108,13 @@ public class MyController {
         }
     }
 
+    // curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"tagId\":\"jorma\"}" http://localhost:8080/blogsWithTag
+    @RequestMapping(value = "/blogsWithTag", method = RequestMethod.POST)
+    public Iterable<Blog> findBlogsWithTag(@RequestBody Tag tag){
+        tag=tagDatabaseHandler.findById(tag.tagId).get();
+        return tag.blogList;
+    }
+
+
+
 }
