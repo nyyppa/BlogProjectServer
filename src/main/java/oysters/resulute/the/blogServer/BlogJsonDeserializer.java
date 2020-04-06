@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @JsonComponent
 public class BlogJsonDeserializer extends JsonDeserializer<Blog> {
-    public static final String idKey="id";
+    public static final String idKey="blogId";
     public static final String authorKey="author";
     public static final String textKey="text";
     public static final String tagsKey="tags";
