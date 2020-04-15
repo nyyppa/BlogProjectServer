@@ -43,7 +43,7 @@ public class Blog implements Serializable {
     private Set<Tag> tags;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "parentBlog", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentBlog", cascade = CascadeType.MERGE)
     private Set<Comment> comments;
 
     @Column(nullable = false, updatable = false)
@@ -107,10 +107,13 @@ public class Blog implements Serializable {
     }
 
     public void addComment(Comment comment){
-        if(comments.add(comment)){
-            comment.setParentBlog(this);
+        if(comments.remove(comment)){
+         System.out.println("poistu");
         }
-
+        if(comments.add(comment)){
+            System.out.println("lisäs");
+        }
+        comment.setParentBlog(this);
     }
 
     public Date getCreationTime() {
