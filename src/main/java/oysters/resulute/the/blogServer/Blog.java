@@ -107,6 +107,7 @@ public class Blog implements Serializable {
     }
 
     public void addComment(Comment comment){
+        comment.setParentBlog(this);
         if(comments.add(comment)){
             comment.setParentBlog(this);
         }else{

@@ -65,6 +65,7 @@ public class MyController {
     public ResponseEntity<Blog>  saveBlogPost(@RequestBody Blog blog, UriComponentsBuilder b){
         System.out.println(blog);
         blogDatabase.save(blog);
+        System.out.println(blog);
         UriComponents uriComponents =
                 b.path("/blogs/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
@@ -87,8 +88,8 @@ public class MyController {
         Blog blog=blogDatabase.findById(blogId).get();
         System.out.println(comment);
         blog.addComment(comment);
-        //commentDatabaseHandler.save(comment);
-        blogDatabase.save(blog);
+        commentDatabaseHandler.save(comment);
+        //blogDatabase.save(blog);
         UriComponents uriComponents =
                 b.path("/comment/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
