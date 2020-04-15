@@ -39,6 +39,13 @@ public class Comment implements Serializable {
         this.parentBlog = parentBlog;
     }
 
+    public void modifyComment(Comment comment){
+        if(comment.getCommentId()==this.commentId){
+            setAuthor(comment.getAuthor());
+            setText(comment.getText());
+        }
+    }
+
     public long getCommentId() {
         return commentId;
     }

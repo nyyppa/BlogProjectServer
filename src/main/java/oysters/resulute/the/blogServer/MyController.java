@@ -87,10 +87,10 @@ public class MyController {
         Blog blog=blogDatabase.findById(blogId).get();
         System.out.println(comment);
         blog.addComment(comment);
-        commentDatabaseHandler.save(comment);
-        //blogDatabase.save(blog);
+        //commentDatabaseHandler.save(comment);
+        blogDatabase.save(blog);
         UriComponents uriComponents =
-                b.path("/comment/{id}").buildAndExpand(comment.getParentBlog().getBlogId());
+                b.path("/comment/{id}").buildAndExpand(blog.getBlogId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uriComponents.toUri());
 
