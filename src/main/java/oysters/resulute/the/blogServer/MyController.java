@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class MyController {
@@ -72,6 +73,16 @@ public class MyController {
         headers.setLocation(uriComponents.toUri());
 
         return new ResponseEntity<Blog>(blog, headers, HttpStatus.CREATED);
+    }
+
+    //curl http://localhost:8080/search/word
+    @RequestMapping("/search/{searchWord}")
+    public Iterable<Blog> search(@PathVariable String searchWord){
+        Set<Blog> result=blogDatabase.findByAuthorContaining(searchWord).and(blogDatabase.findByTextContaining(searchWord)).toSet();
+        for(Blog blog:result){
+            System.out.println(blog);
+        }
+        return result;
     }
 
     // curl http://localhost:8080/tags/
