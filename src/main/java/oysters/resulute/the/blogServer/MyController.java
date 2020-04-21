@@ -5,18 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
-public class MyController {
+public class MyController extends WebSecurityConfigurerAdapter {
     @Autowired
     MyBlogDatabaseHandler blogDatabase;
 
@@ -25,6 +27,25 @@ public class MyController {
 
     @Autowired
     MyCommentDatabaseHandler commentDatabaseHandler;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // @formatter:off
+        http
+                .authorizeRequests(a -> a
+                        .antMatchers("/", "/error", "/webjars/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                )
+                .oauth2Login();
+        // @formatter:on
+    }
+    @GetMapping("/user")
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        return Collections.singletonMap("name", principal.getAttribute("name"));
+    }
 
     // curl http://localhost:8080/blogs/1
     @RequestMapping(value = "/blogs/{blogId}",  method= RequestMethod.GET)
