@@ -2,6 +2,10 @@ package oysters.resulute.the.blogServer;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +14,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.util.*;
 
+@SpringBootApplication
 @RestController
-public class MyController extends WebSecurityConfigurerAdapter {
+//@EnableWebMvc
+public class MyController extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
     @Autowired
     MyBlogDatabaseHandler blogDatabase;
 
@@ -28,6 +39,14 @@ public class MyController extends WebSecurityConfigurerAdapter {
     @Autowired
     MyCommentDatabaseHandler commentDatabaseHandler;
 
+
+    /*
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "POST", "DELETE");
+    }*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -35,6 +54,11 @@ public class MyController extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(a -> a
                         .antMatchers("/", "/error", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
+                ) .logout(l -> l
+                .logoutSuccessUrl("/").permitAll()
+        )
+                .csrf(c -> c
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -44,6 +68,7 @@ public class MyController extends WebSecurityConfigurerAdapter {
     }
     @GetMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        System.out.println(principal);
         return Collections.singletonMap("name", principal.getAttribute("name"));
     }
 
