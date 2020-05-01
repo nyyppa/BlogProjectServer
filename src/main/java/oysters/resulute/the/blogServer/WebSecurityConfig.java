@@ -15,9 +15,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        String[] resources = new String[]{
+                "/", "/home", "/static/**","/**", "/static/css", "/static/js"
+        };
+
         http
+
                 .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers(resources).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
