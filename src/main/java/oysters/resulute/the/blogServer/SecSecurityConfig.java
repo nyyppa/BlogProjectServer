@@ -14,6 +14,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+@Profile("!https")
 public class SecSecurityConfig
         extends WebSecurityConfigurerAdapter {
 
