@@ -33,6 +33,8 @@ public class Blog implements Serializable {
     @GeneratedValue
     private long blogId;
     private String author;
+    @Lob
+    @Column( length = 100000 )
     private String text;
     @ManyToMany
     @JoinTable(
