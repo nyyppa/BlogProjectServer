@@ -27,7 +27,6 @@ import java.util.*;
     */
 @Entity
 @JsonDeserialize(using = BlogJsonDeserializer.class)
-//@JsonSerialize(using = BlogJsonSerializer.class)
 public class Blog implements Serializable {
 
     @Id
@@ -67,6 +66,7 @@ public class Blog implements Serializable {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+
     public void addTag(Tag tag){
         if(tags==null){
             tags=new HashSet<>();
@@ -106,6 +106,10 @@ public class Blog implements Serializable {
         this.comments = comments;
     }
 
+    /**
+     * Links comment and blog
+     * @param comment Comment given for blog
+     */
     public void addComment(Comment comment){
         comment.setParentBlog(this);
         if(comments.add(comment)){

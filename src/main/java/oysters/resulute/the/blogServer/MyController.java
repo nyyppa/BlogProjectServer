@@ -26,6 +26,12 @@ public class MyController {
     @Autowired
     MyCommentDatabaseHandler commentDatabaseHandler;
 
+    /**
+     * Tries to find blong with given blogId
+     * @param blogId
+     * @return
+     * @throws CannotFindBlogException
+     */
     // curl http://localhost:8080/blogs/1
     @RequestMapping(value = "/blogs/{blogId}",  method= RequestMethod.GET)
     public ResponseEntity<Blog> fetchBlog(@PathVariable long blogId) throws CannotFindBlogException {
@@ -37,15 +43,24 @@ public class MyController {
     }
 
 
+    /**
+     * Finds every blog in database
+     * @return
+     */
     // curl http://localhost:8080/blogs/
-
     @RequestMapping(value = "/blogs/",  method= RequestMethod.GET)
     public Iterable<Blog> fetchAllBlogs() {
+        System.out.println("BLOGS");
         return blogDatabase.findAll();
     }
 
 
-
+    /**
+     * Deletes blog with given blogID and it's comments
+     * @param blogId
+     * @return
+     * @throws CannotFindBlogException
+     */
     // curl -X DELETE http://localhost:8080/delete/1
     @RequestMapping(value = "/delete/{blogId}",  method= RequestMethod.DELETE)
     public ResponseEntity<Void> deleteBlog(@PathVariable long blogId) throws CannotFindBlogException {
@@ -56,6 +71,13 @@ public class MyController {
             throw new CannotFindBlogException(blogId);
         }
     }
+
+    /**
+     * Creates blog or if blog with same blogId already exists modifies the orginal.
+     * @param blog
+     * @param b
+     * @return
+     */
     //to modify existing blog
     //curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"id\":1,\"author\":\"value\",\"text\":\"heii\"}" http://localhost:8080/save
     //to save new blog
@@ -75,9 +97,15 @@ public class MyController {
         return new ResponseEntity<Blog>(blog, headers, HttpStatus.CREATED);
     }
 
+    /**
+     * Returns blogs where either text or author contains given search word
+     * @param searchWord
+     * @return
+     */
     //curl http://localhost:8080/search/word
     @RequestMapping("/search/{searchWord}")
     public Iterable<Blog> search(@PathVariable String searchWord){
+        System.out.println(searchWord);
         Set<Blog> result=blogDatabase.findByAuthorContaining(searchWord).and(blogDatabase.findByTextContaining(searchWord)).toSet();
         for(Blog blog:result){
             System.out.println(blog);
@@ -85,12 +113,23 @@ public class MyController {
         return result;
     }
 
+    /**
+     * Returns all tags in database
+     * @return
+     */
     // curl http://localhost:8080/tags/
     @RequestMapping(value = "/tags/",  method= RequestMethod.GET)
     public Iterable<Tag> fetchAllTags() {
         return tagDatabaseHandler.findAll();
     }
 
+    /**
+     * Adds comment for blog with given blogId
+     * @param comment
+     * @param blogId
+     * @param b
+     * @return
+     */
     // curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"author\":\"value\",\"text\":\"heii\"}" http://localhost:8080/comment/1
     //TODO add error handling
     //TODO clean uri component
@@ -109,6 +148,12 @@ public class MyController {
         return new ResponseEntity<Comment>(comment, headers, HttpStatus.CREATED);
     }
 
+    /**
+     * Finds comments for blog with given blogId
+     * @param blogId
+     * @return
+     * @throws CannotFindBlogException
+     */
     // curl http://localhost:8080/comment/1
     @RequestMapping(value = "/comment/{blogId}",  method= RequestMethod.GET)
     public Iterable<Comment> fetchComments(@PathVariable long blogId) throws CannotFindBlogException {
@@ -120,6 +165,11 @@ public class MyController {
         }
     }
 
+    /**
+     * Finds blogs that have given tag
+     * @param tag
+     * @return
+     */
     // curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"tagId\":\"jorma\"}" http://localhost:8080/blogsWithTag
     @RequestMapping(value = "/blogsWithTag", method = RequestMethod.POST)
     public Iterable<Blog> findBlogsWithTag(@RequestBody Tag tag){
