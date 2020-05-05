@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Class representing comment given for blog post
+ */
 @Entity
 public class Comment implements Serializable {
 
@@ -39,6 +42,11 @@ public class Comment implements Serializable {
         this.parentBlog = parentBlog;
     }
 
+    /**
+     * Copies author and text fields from given comment to this comment.
+     * Use when you just want to modify existing comment.
+     * @param comment
+     */
     public void modifyComment(Comment comment){
         if(comment.getCommentId()==this.commentId){
             setAuthor(comment.getAuthor());

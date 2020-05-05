@@ -11,7 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//@JsonSerialize(using = TagJsonSerializer.class)
+/**
+ * Class representing tags for blogs
+ */
 @Entity
 public class Tag implements Serializable {
 
@@ -44,6 +46,10 @@ public class Tag implements Serializable {
         this.tagId = tagId;
     }
 
+    /**
+     * Adds blog for already existing tag
+     * @param blog
+     */
     public void addBlog(Blog blog){
         if(blogList==null){
             blogList=new HashSet<>();

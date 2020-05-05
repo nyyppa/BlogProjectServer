@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Optional;
 
+/**
+ * Desirealizes blog from JSON representation
+ */
 @JsonComponent
 public class BlogJsonDeserializer extends JsonDeserializer<Blog> {
     public static final String idKey="blogId";
@@ -45,10 +48,15 @@ public class BlogJsonDeserializer extends JsonDeserializer<Blog> {
         return blog;
     }
 
+    /**
+     * Checks if tags already exits in database,
+     * if the do establishes link between blog and tag
+     * else it creates new tag and saves it to the database
+     * @param blog
+     * @param node
+     */
     public void handleTags(Blog blog, JsonNode node){
-        System.out.println("hei");
         if(node.hasNonNull(tagsKey)){
-            System.out.println("moi");
             ArrayNode tags= (ArrayNode) node.get(tagsKey);
             Iterator<JsonNode>iterator=tags.iterator();
             while(iterator.hasNext()){
